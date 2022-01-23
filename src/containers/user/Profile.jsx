@@ -1,6 +1,6 @@
 import React, {Fragment, useState} from 'react'
-import Header from "../app/Header";
-import Footer from "../app/Footer";
+import Header from "../../components/app/Header";
+import Footer from "../../components/app/Footer";
 import {Tab} from '@headlessui/react'
 import Modal from "../../utils/Modal";
 import visa from "../../assets/img/icons/visa.svg"

@@ -1,9 +1,9 @@
 import swal from 'sweetalert';
 
-export const successfull = ($text) => {
+export const successfull = (text = '') => {
     swal({
         title: 'Hecho!',
-        text: $text,
+        text: text === '' ? 'Creado Correctamente' : text,
         icon: 'success',
         timer: 2000,
         button: false

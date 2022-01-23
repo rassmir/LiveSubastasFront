@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import "react-data-table-component-extensions/dist/index.css";
 import App from './routes/App';
 import reportWebVitals from './reportWebVitals';
 import {composeWithDevTools} from 'redux-devtools-extension';
@@ -9,6 +10,7 @@ import {createStore, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 import {Provider} from "react-redux";
+import {middlewareAuth} from "./actions/usersActions";
 
 const loggerMiddleware = createLogger();
 
@@ -18,6 +20,10 @@ export const store = createStore(
         applyMiddleware(thunkMiddleware, loggerMiddleware)
     )
 );
+
+if (localStorage.access_token) {
+    store.dispatch(middlewareAuth(localStorage.access_token));
+}
 
 ReactDOM.render(
     <Provider store={store}>

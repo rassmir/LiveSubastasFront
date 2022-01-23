@@ -21,11 +21,21 @@ const Header = () => {
     const onOpenCloseModalRegister = () => {
         setModalRegister(!modalRegister)
         setModalLogin(false);
+        reset({
+            email: '',
+            password: '',
+            name: '',
+            terms: false
+        })
     }
 
     const onOpenCloseModalLogin = () => {
         setModalLogin(!modalLogin)
         setModalRegister(false)
+        reset({
+            email: '',
+            password: ''
+        })
     }
 
     const FormRegister = (data) => {
@@ -37,18 +47,21 @@ const Header = () => {
         Fdata.append('name', name);
         Fdata.append('rol', '1');
         dispatch(fregister('auth/register', Fdata, REGISTER_SUCCESS, REGISTER_FAIL, true, 'Registrado Correctamente', 'Fallo En El Registro'))
-        reset({
-            email: '',
-            password: '',
-            name: '',
-            terms: false
-        })
 
         setModalRegister(false)
     }
 
+    const FormLogin = (data) => {
+        const {email, password} = data;
+        const Fdata = new FormData();
+        Fdata.append('email', email);
+        Fdata.append('password', password);
+
+        setModalLogin(false)
+    }
+
     const guestLinks = () => {
-        return(
+        return (
             <Fragment>
                 <div className="flex text-2xl space-x-8">
                     <button onClick={() => onOpenCloseModalRegister()}
@@ -81,12 +94,12 @@ const Header = () => {
                     {guestLinks()}
                 </div>
             </div>
-            <Modal onOpen={modalRegister} onClose={setModalRegister}>
+            <Modal height="max-w-4xl" onOpen={modalRegister} onClose={setModalRegister}>
                 <div className="flex font-Poppins-Rg">
                     <div className="w-6/12">
-                        <img src={bglogin} alt="" className="rounded-l-3xl"/>
+                        <img src={bgregister} alt="" className="rounded-l-3xl"/>
                     </div>
-                    <form onSubmit={handleSubmit(FormRegister)} className="w-6/12">
+                    <form onSubmit={handleSubmit(FormRegister)} className="w-6/12" onReset={reset}>
                         <img src={logo} className="h-8 m-auto mt-8" alt=""/>
                         <div className="text-center mt-5">
                             <h4 className="font-bold text-xl">Registrate y comienza a ofertar</h4>
@@ -168,32 +181,46 @@ const Header = () => {
                     </form>
                 </div>
             </Modal>
-            <Modal onOpen={modalLogin} onClose={setModalLogin}>
+            <Modal height="max-w-4xl" onOpen={modalLogin} onClose={setModalLogin}>
                 <div className="flex font-Poppins-Rg">
                     <div className="w-6/12">
-                        <img src={bgregister} alt="" className="rounded-l-3xl"/>
+                        <img src={bglogin} alt="" className="rounded-l-3xl"/>
                     </div>
-                    <div className="w-6/12">
+                    <form onSubmit={handleSubmit(FormLogin)} className="w-6/12" onReset={reset}>
                         <img src={logo} className="h-8 m-auto mt-10" alt=""/>
                         <div className="text-center mt-5">
                             <h4 className="font-bold text-xl">Inicia Sesión y comienza a ofertar</h4>
                         </div>
                         <div className="px-12 mt-10">
-                            <div className="mb-4">
+                            <div className="mb-6">
                                 <label className="block text-primary text-sm font-bold mb-2" htmlFor="email">
                                     Correo Electrónico
                                 </label>
                                 <input
-                                    className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:border-primary focus:shadow-outline"
-                                    id="email" type="text" placeholder="Correo"/>
+                                    id="email"
+                                    className={`shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                                        errors.email ? "border-red-500 ring-1 ring-red-500" : "focus:border-primary focus:ring-1 focus:ring-primary"
+                                    }`}
+                                    {...register("email", {required: true})}
+                                    name="email" type="email"
+                                    placeholder="Ingrese correo electrónico"/>
+                                {errors.email &&
+                                    <p className="text-xs text-red-500 mt-1 absolute">Este campo es requerido</p>}
                             </div>
                             <div className="mb-4">
                                 <label className="block text-primary text-sm font-bold mb-2" htmlFor="password">
                                     Contraseña
                                 </label>
                                 <input
-                                    className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:border-primary focus:shadow-outline"
-                                    id="password" type="text" placeholder="Correo"/>
+                                    id="password"
+                                    className={`shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                                        errors.password ? "border-red-500 ring-1 ring-red-500" : "focus:border-primary focus:ring-1 focus:ring-primary"
+                                    }`}
+                                    {...register("password", {required: true})}
+                                    name="password" type="password"
+                                    placeholder="Ingrese contraseña"/>
+                                {errors.password &&
+                                    <p className="text-xs text-red-500 mt-1 absolute">Este campo es requerido</p>}
                             </div>
                         </div>
                         <div className="mt-8 px-12">
@@ -208,7 +235,7 @@ const Header = () => {
                                                                        className="text-primary font-Poppins-Bd">Registrate</button>
                                  </span>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </Modal>
         </Fragment>

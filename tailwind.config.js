@@ -11,6 +11,7 @@ module.exports = {
         '700px': '700px'
       },
       colors: {
+        neutro:'#f7f9fc',
         primary:'#FF7400',
         hprimary:'#FD8C2D',
         secondary:'rgb(251, 246, 244)',
