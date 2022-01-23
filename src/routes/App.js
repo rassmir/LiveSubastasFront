@@ -19,9 +19,9 @@ const App = () => {
                 <Route exact path="/panel/mi-perfil" component={Profile}/>
 
                 <Route exact path="/admin/login" component={Login}/>
-                <RouteAdmin exact path="/admin/inicio" component={AdminIndex}/>
-                <RouteAdmin exact path="/admin/categorias" component={Category}/>
-                <RouteAdmin exact path="/admin/subcategorias" component={SubCategory}/>
+                <Route exact path="/admin/inicio" component={AdminIndex}/>
+                <Route exact path="/admin/categorias" component={Category}/>
+                <Route exact path="/admin/subcategorias" component={SubCategory}/>
             </Switch>
         </Router>
     )
