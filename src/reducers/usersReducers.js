@@ -3,6 +3,7 @@ import {GET_USER_AUTH, LOGIN_FAIL, LOGIN_SUCCESS, REGISTER_FAIL, REGISTER_SUCCES
 const INITIAL_STATE = {
     isAuthenticated: false,
     users: [],
+    user: {},
     load: false
 }
 
@@ -26,7 +27,7 @@ const usersReducers = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 isAuthenticated: true,
-                users: payload,
+                user: payload,
                 load: true
             };
         case SET_AUTH:

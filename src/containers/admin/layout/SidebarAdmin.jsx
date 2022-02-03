@@ -11,7 +11,7 @@ import {GET_USER_AUTH, LOGIN_FAIL} from "../../../types/usersTypes";
 
 const SidebarAdmin = ({children}) => {
     const dispatch = useDispatch();
-    const {users} = useSelector(state => state.usersReducers);
+    const {user} = useSelector(state => state.usersReducers);
     useEffect(() => {
         dispatch(authProfile('auth/user-profile',GET_USER_AUTH,LOGIN_FAIL))
     }, [dispatch])
@@ -68,7 +68,7 @@ const SidebarAdmin = ({children}) => {
                                  <Menu as="div" className="relative inline-block text-left">
                                      <div>
                                          <Menu.Button className="inline-flex gap-2 justify-center w-full px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                                             {users.name}
+                                             {user.name}
                                              <BiChevronDown className="w-5 h-5"/>
                                          </Menu.Button>
                                      </div>

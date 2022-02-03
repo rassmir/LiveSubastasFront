@@ -11,7 +11,6 @@ import {useForm} from "react-hook-form";
 
 const Header = () => {
     const users = useSelector(state => state.usersReducers);
-    console.log(users)
     const dispatch = useDispatch();
     const [modalLogin, setModalLogin] = useState(false);
     const [modalRegister, setModalRegister] = useState(false);
