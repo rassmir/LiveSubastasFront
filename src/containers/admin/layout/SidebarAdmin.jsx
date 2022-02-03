@@ -1,5 +1,5 @@
 import React, {Fragment, useEffect} from "react";
-import {BiArchive, BiArchiveOut, BiChevronDown, BiHomeAlt} from "react-icons/bi";
+import {BiArchive, BiArchiveOut, BiBookmark, BiChevronDown, BiHomeAlt} from "react-icons/bi";
 import {FiMenu} from "react-icons/fi";
 import {SearchIcon} from "@heroicons/react/solid";
 import { Menu } from '@headlessui/react'
@@ -43,6 +43,11 @@ const SidebarAdmin = ({children}) => {
                               duration-200 transform rounded-md hover:bg-gray-200 hover:text-gray-700" activeClassName="text-white bg-primary hover:bg-primary hover:text-white">
                                  <BiArchiveOut className="h-5 w-5"/>
                                  <span className="mx-4 font-medium">Subcategorías</span>
+                             </NavLink>
+                             <NavLink to="/admin/marcas" className="flex items-center px-4 py-3 mt-5 transition-colors
+                              duration-200 transform rounded-md hover:bg-gray-200 hover:text-gray-700" activeClassName="text-white bg-primary hover:bg-primary hover:text-white">
+                                 <BiBookmark className="h-5 w-5"/>
+                                 <span className="mx-4 font-medium">Marcas</span>
                              </NavLink>
                          </nav>
                      </div>

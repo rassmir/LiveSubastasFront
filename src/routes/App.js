@@ -9,6 +9,7 @@ import AdminIndex from "../containers/admin/Index";
 import Category from "../containers/admin/Category";
 import SubCategory from "../containers/admin/SubCategory";
 import RouteAdmin from "./RouteAdmin";
+import Brand from "../containers/admin/Brand";
 
 const App = () => {
     return (
@@ -19,9 +20,10 @@ const App = () => {
                 <Route exact path="/panel/mi-perfil" component={Profile}/>
 
                 <Route exact path="/admin/login" component={Login}/>
-                <Route exact path="/admin/inicio" component={AdminIndex}/>
-                <Route exact path="/admin/categorias" component={Category}/>
-                <Route exact path="/admin/subcategorias" component={SubCategory}/>
+                <RouteAdmin exact path="/admin/inicio" component={AdminIndex}/>
+                <RouteAdmin exact path="/admin/categorias" component={Category}/>
+                <RouteAdmin exact path="/admin/subcategorias" component={SubCategory}/>
+                <RouteAdmin exact path="/admin/marcas" component={Brand}/>
             </Switch>
         </Router>
     )

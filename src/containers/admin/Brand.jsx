@@ -1,97 +1,96 @@
 import React, {Fragment, useEffect, useState} from "react";
 import SidebarAdmin from "./layout/SidebarAdmin";
 import {FiExternalLink} from "react-icons/fi";
-import Datatable from "react-data-table-component";
+import {PencilIcon, TrashIcon} from "@heroicons/react/outline";
+import Modal from "../../utils/Modal";
 import DataTableExtensions from "react-data-table-component-extensions";
+import Datatable from "react-data-table-component";
 import {useDispatch, useSelector} from "react-redux";
 import {getAll} from "../../actions/generalActions";
-import {
-    ADD_CATEGORY, DELETE_CATEGORY,
-    ERROR_CATEGORY,
-    GET_ALL_CATEGORIES,
-    LOAD_CATEGORY,
-    UPDATE_CATEGORY
-} from "../../types/categoriesTypes";
-import {PencilIcon, TrashIcon} from "@heroicons/react/outline";
+import {ERROR_SUBCATEGORY, GET_ALL_SUBCATEGORIES, LOAD_SUBCATEGORY} from "../../types/subcategoriesTypes";
 import {useForm} from "react-hook-form";
-import Modal from "../../utils/Modal";
 import {deleteAll, postAll, updateAll} from "../../actions/crudActions";
+import {ADD_BRAND, DELETE_BRAND, ERROR_BRAND, GET_ALL_BRANDS, LOAD_BRAND, UPDATE_BRAND} from "../../types/brandsTypes";
 
-const Category = () => {
-    const dispatch = useDispatch();
-    const [modalCreateCategory, setModalCreateCategory] = useState(false);
-    const [modalEditCategory, setModalEditCategory] = useState(false);
-    const [modalDeleteCategory, setModalDeleteCategory] = useState(false);
-    const [category, setCategory] = useState({
-        name: ''
-    })
-    const {categories} = useSelector(state => state.categoriesReducers);
-    useEffect(() => {
-        dispatch(getAll('category', LOAD_CATEGORY, GET_ALL_CATEGORIES, ERROR_CATEGORY))
-    }, [dispatch])
-
+const Brand = () => {
     const {register, formState: {errors}, handleSubmit, reset, setValue} = useForm();
 
-    const openCloseCreateCategory = () => {
-        setModalCreateCategory(!modalCreateCategory)
+    const dispatch = useDispatch();
+    const [modalCreateBrand, setModalCreateBrand] = useState(false);
+    const [modalEditBrand, setModalEditBrand] = useState(false);
+    const [modalDeleteBrand, setModalDeleteBrand] = useState(false);
+    const [brand, setBrand] = useState({
+        name: ''
+    })
+    const {subcategories} = useSelector(state => state.subcategoriesReducers);
+    const {brands} = useSelector(state => state.brandsReducers);
+    useEffect(() => {
+        dispatch(getAll('mark', LOAD_BRAND, GET_ALL_BRANDS, ERROR_BRAND))
+        dispatch(getAll('category/sub', LOAD_SUBCATEGORY, GET_ALL_SUBCATEGORIES, ERROR_SUBCATEGORY))
+    }, [dispatch])
+
+    const openCloseCreateBrand = () => {
+        setModalCreateBrand(!modalCreateBrand)
         reset({
             name: ''
         })
     }
 
-    const openCloseEditCategory = () => {
-        setModalEditCategory(!modalEditCategory)
+    const openCloseEditBrand = () => {
+        setModalEditBrand(!modalEditBrand)
     }
 
-    const openCloseDeleteCategory = () => {
-        setModalDeleteCategory(!modalDeleteCategory)
+    const openCloseDeleteBrand = () => {
+        setModalDeleteBrand(!modalDeleteBrand)
     }
 
     const openModalByType = (row, type) => {
         setValue('id', row.id)
         setValue('name', row.name)
-        setCategory({
+        setBrand({
             name: row.name
         })
 
         if (type === "edit") {
-            openCloseEditCategory()
+            openCloseEditBrand()
         }
+
         if (type === "delete") {
-            openCloseDeleteCategory()
+            openCloseDeleteBrand()
         }
     }
 
-    const FormCreateCategory = (data) => {
-        const {name} = data;
+    const FormCreateBrand = (data) => {
+        const {name, sub_category_id} = data;
         const Fdata = new FormData();
         Fdata.append('name', name);
-        dispatch(postAll('admi/category', Fdata, ADD_CATEGORY, ERROR_CATEGORY, true, '', ''))
+        Fdata.append('sub_category_id', sub_category_id);
+        dispatch(postAll('admi/mark', Fdata, ADD_BRAND, ERROR_BRAND, true, '', ''))
         reset({
             name: ''
         })
-        setModalCreateCategory(false)
+        setModalCreateBrand(false)
     }
 
-    const FormEditCategory = (data) => {
+    const FormEditBrand = (data) => {
         const {name, id} = data;
         const Fdata = new FormData();
         Fdata.append('_method', 'PATCH');
         Fdata.append('name', name);
-        dispatch(updateAll('admi/category', id, Fdata, UPDATE_CATEGORY, ERROR_CATEGORY, 'Actualizado Correctamente', ''))
+        dispatch(updateAll('admi/category', id, Fdata, UPDATE_BRAND, ERROR_BRAND, 'Actualizado Correctamente', ''))
         reset({
             name: ''
         })
-        setModalEditCategory(false);
+        setModalEditBrand(false);
     }
 
-    const FormDeleteCategory = (data) => {
+    const FormDeleteBrand = (data) => {
         const {id} = data;
-        dispatch(deleteAll('admi/category', id, DELETE_CATEGORY, ERROR_CATEGORY, 'Eliminado Correctamente', ''))
-        setModalDeleteCategory(false);
+        dispatch(deleteAll('admi/mark', id, DELETE_BRAND, ERROR_BRAND, 'Eliminado Correctamente', ''))
+        setModalDeleteBrand(false);
     }
 
-    const DatatableCategory = () => {
+    const DatatableBrand = () => {
         const customStyles = {
             rows: {
                 style: {
@@ -120,8 +119,12 @@ const Category = () => {
                 selector: row => row.id
             },
             {
-                name: 'CATEGORÍA',
+                name: 'MARCA',
                 selector: row => row.name
+            },
+            {
+                name: 'SUBCATEGORÍA',
+                selector: row => row.sub_Category
             },
             {
                 name: 'ACCIONES',
@@ -146,12 +149,12 @@ const Category = () => {
         ]
         return (
             <Fragment>
-                <Modal height="max-w-2xl" onOpen={modalCreateCategory} onClose={setModalCreateCategory}>
-                    <form onSubmit={handleSubmit(FormCreateCategory)} className="p-8">
+                <Modal height="max-w-2xl" onOpen={modalCreateBrand} onClose={setModalCreateBrand}>
+                    <form onSubmit={handleSubmit(FormCreateBrand)} className="p-8">
                         <div className="grid grid-cols-1 gap-y-6">
                             <div>
                                 <label className="block text-primary text-sm font-bold mb-2" htmlFor="name">
-                                    Nombre De Categoría
+                                    Nombre De Marca
                                 </label>
                                 <input
                                     id="name"
@@ -165,6 +168,31 @@ const Category = () => {
                                     <p className="text-xs text-red-500 mt-1 absolute">Este campo es requerido</p>}
                             </div>
                             <div>
+                                <label className="block text-primary text-sm font-bold mb-2" htmlFor="name">
+                                    Subcategoría
+                                </label>
+                                <div className="relative">
+                                    <select className={`block appearance-none w-full border rounded text-gray-700 py-3 px-4 pr-28 rounded-md
+                                 leading-tight focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary`}
+                                            {...register("sub_category_id")}>
+                                        <option disabled>Seleccione subcategoría</option>
+                                        {subcategories.map(value => (
+                                            <option key={value.id} value={value.id}>
+                                                {value.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div
+                                        className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-grSecond1-c2">
+                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
                                 <button
                                     className="w-full bg-primary hover:bg-hprimary text-white font-Poppins-Bd py-3 px-4 rounded">
                                     Guardar
@@ -174,12 +202,12 @@ const Category = () => {
                     </form>
                 </Modal>
 
-                <Modal height="max-w-2xl" onOpen={modalEditCategory} onClose={setModalEditCategory}>
-                    <form onSubmit={handleSubmit(FormEditCategory)} className="p-8">
+                <Modal height="max-w-2xl" onOpen={modalEditBrand} onClose={setModalEditBrand}>
+                    <form onSubmit={handleSubmit(FormEditBrand)} className="p-8">
                         <div className="grid grid-cols-1 gap-y-6">
                             <div>
                                 <label className="block text-primary text-sm font-bold mb-2" htmlFor="name">
-                                    Nombre De Categoría
+                                    Nombre De Marca
                                 </label>
                                 <input
                                     id="name"
@@ -202,12 +230,12 @@ const Category = () => {
                     </form>
                 </Modal>
 
-                <Modal height="max-w-2xl" onOpen={modalDeleteCategory} onClose={setModalDeleteCategory}>
-                    <form onSubmit={handleSubmit(FormDeleteCategory)} className="p-8">
+                <Modal height="max-w-2xl" onOpen={modalDeleteBrand} onClose={setModalDeleteBrand}>
+                    <form onSubmit={handleSubmit(FormDeleteBrand)} className="p-8">
                         <div className="grid grid-cols-1 gap-y-6">
                             <h2 className="text-[20px] text-center font-Poppins-Sb">Estás seguro que deseas
-                                eliminar la categoría: <br/>
-                                <span className="text-primary">"{category.name}"</span> ?</h2>
+                                eliminar la marca: <br/>
+                                <span className="text-primary">"{brand.name}"</span> ?</h2>
                             <div>
                                 <button
                                     className="w-full bg-red-600 hover:bg-red-500 text-white font-Poppins-Bd py-3 px-4 rounded">
@@ -220,14 +248,14 @@ const Category = () => {
 
                 <DataTableExtensions
                     columns={columns}
-                    data={categories}
+                    data={brands}
                     print={false}
                     export={false}
-                    filterPlaceholder="Buscar Categoría"
+                    filterPlaceholder="Buscar Marca"
                 >
                     <Datatable
                         columns={columns}
-                        data={categories}
+                        data={brands}
                         fixedHeader={true}
                         customStyles={customStyles}
                         pagination={true}
@@ -236,26 +264,25 @@ const Category = () => {
             </Fragment>
         )
     }
-
     return (
         <Fragment>
             <SidebarAdmin>
                 <div className="flex justify-between items-center">
                     <div>
-                        <h3 className="font-Poppins-Sb text-[24px] text-primary">Lista de categorías</h3>
+                        <h3 className="font-Poppins-Sb text-[24px] text-primary">Lista de marcas</h3>
                     </div>
                     <div>
                         <button
-                            onClick={() => openCloseCreateCategory()}
+                            onClick={() => openCloseCreateBrand()}
                             className="flex items-center gap-2 text-white bg-primary px-6 py-2.5 rounded-lg hover:opacity-80">
                             <FiExternalLink className="w-5 h-5"/>
-                            Crear Categoría
+                            Crear Marca
                         </button>
                     </div>
                 </div>
-                {DatatableCategory()}
+                {DatatableBrand()}
             </SidebarAdmin>
         </Fragment>
     )
 }
-export default Category;
+export default Brand;
