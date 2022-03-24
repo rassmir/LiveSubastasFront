@@ -84,7 +84,7 @@ export const middlewareAuth = (access_token) => {
     };
 }
 
-export const authProfile = (url,type_success,type_error) => async dispatch => {
+export const authProfile = (url, type_success, type_error) => async dispatch => {
     await axios.get(SERVER_URL + url, {
         headers: {
             'Authorization': `Bearer ${localStorage.access_token}`

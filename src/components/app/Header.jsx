@@ -5,8 +5,8 @@ import Modal from "../../utils/Modal";
 import bglogin from "../../assets/img/img-login.jpeg";
 import bgregister from "../../assets/img/img-register.jpeg";
 import {useDispatch, useSelector} from "react-redux";
-import {fregister} from "../../actions/usersActions";
-import {REGISTER_FAIL, REGISTER_SUCCESS} from "../../types/usersTypes";
+import {fLogin, fregister} from "../../actions/usersActions";
+import {LOGIN_FAIL, LOGIN_SUCCESS, REGISTER_FAIL, REGISTER_SUCCESS} from "../../types/usersTypes";
 import {useForm} from "react-hook-form";
 
 const Header = () => {
@@ -16,6 +16,7 @@ const Header = () => {
     const [modalRegister, setModalRegister] = useState(false);
 
     const {register, formState: {errors}, handleSubmit, reset} = useForm();
+    const {register:rgLogin, formState: {errors:errLogin}, handleSubmit:hdlLogin, reset:rstLogin} = useForm();
 
     const onOpenCloseModalRegister = () => {
         setModalRegister(!modalRegister)
@@ -37,26 +38,35 @@ const Header = () => {
         })
     }
 
-    const FormRegister = (data) => {
-        const {email, password, name} = data;
-
-        const Fdata = new FormData();
-        Fdata.append('email', email);
-        Fdata.append('password', password);
-        Fdata.append('name', name);
-        Fdata.append('rol', '1');
-        dispatch(fregister('auth/register', Fdata, REGISTER_SUCCESS, REGISTER_FAIL, true, 'Registrado Correctamente', 'Fallo En El Registro'))
-
-        setModalRegister(false)
-    }
-
     const FormLogin = (data) => {
         const {email, password} = data;
         const Fdata = new FormData();
         Fdata.append('email', email);
         Fdata.append('password', password);
-
+        dispatch(fLogin('auth/login', Fdata, 'Autenticado Correctamente', LOGIN_SUCCESS,
+            'panel/mi-perfil', LOGIN_FAIL, 'Credenciales Incorrectas'))
         setModalLogin(false)
+        reset({
+            email: '',
+            password: ''
+        })
+    }
+
+    const FormRegister = (data) => {
+        const {email, password, name} = data;
+        const Fdata = new FormData();
+        Fdata.append('email', email);
+        Fdata.append('password', password);
+        Fdata.append('name', name);
+        Fdata.append('rol', '1');
+        dispatch(fregister('auth/register', Fdata, REGISTER_SUCCESS, REGISTER_FAIL, true,
+            'Registrado Correctamente', 'Fallo En El Registro'))
+        setModalRegister(false)
+        reset({
+            email: '',
+            password: '',
+            name: ''
+        })
     }
 
     const guestLinks = () => {
@@ -98,7 +108,7 @@ const Header = () => {
                     <div className="w-6/12">
                         <img src={bgregister} alt="" className="rounded-l-3xl"/>
                     </div>
-                    <form onSubmit={handleSubmit(FormRegister)} className="w-6/12" onReset={reset}>
+                    <form onSubmit={handleSubmit(FormRegister)} className="w-6/12">
                         <img src={logo} className="h-8 m-auto mt-8" alt=""/>
                         <div className="text-center mt-5">
                             <h4 className="font-bold text-xl">Registrate y comienza a ofertar</h4>
@@ -185,7 +195,7 @@ const Header = () => {
                     <div className="w-6/12">
                         <img src={bglogin} alt="" className="rounded-l-3xl"/>
                     </div>
-                    <form onSubmit={handleSubmit(FormLogin)} className="w-6/12" onReset={reset}>
+                    <form onSubmit={hdlLogin(FormLogin)} className="w-6/12">
                         <img src={logo} className="h-8 m-auto mt-10" alt=""/>
                         <div className="text-center mt-5">
                             <h4 className="font-bold text-xl">Inicia Sesión y comienza a ofertar</h4>
@@ -198,12 +208,12 @@ const Header = () => {
                                 <input
                                     id="email"
                                     className={`shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                                        errors.email ? "border-red-500 ring-1 ring-red-500" : "focus:border-primary focus:ring-1 focus:ring-primary"
+                                        errLogin.email ? "border-red-500 ring-1 ring-red-500" : "focus:border-primary focus:ring-1 focus:ring-primary"
                                     }`}
-                                    {...register("email", {required: true})}
+                                    {...rgLogin("email", {required: true})}
                                     name="email" type="email"
                                     placeholder="Ingrese correo electrónico"/>
-                                {errors.email &&
+                                {errLogin.email &&
                                     <p className="text-xs text-red-500 mt-1 absolute">Este campo es requerido</p>}
                             </div>
                             <div className="mb-4">
@@ -213,12 +223,12 @@ const Header = () => {
                                 <input
                                     id="password"
                                     className={`shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                                        errors.password ? "border-red-500 ring-1 ring-red-500" : "focus:border-primary focus:ring-1 focus:ring-primary"
+                                        errLogin.password ? "border-red-500 ring-1 ring-red-500" : "focus:border-primary focus:ring-1 focus:ring-primary"
                                     }`}
-                                    {...register("password", {required: true})}
+                                    {...rgLogin("password", {required: true})}
                                     name="password" type="password"
                                     placeholder="Ingrese contraseña"/>
-                                {errors.password &&
+                                {errLogin.password &&
                                     <p className="text-xs text-red-500 mt-1 absolute">Este campo es requerido</p>}
                             </div>
                         </div>

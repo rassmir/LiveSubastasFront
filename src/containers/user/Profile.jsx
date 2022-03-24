@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react'
+import React, {Fragment, useEffect, useState} from 'react'
 import Header from "../../components/app/Header";
 import Footer from "../../components/app/Footer";
 import {Tab} from '@headlessui/react'
@@ -7,10 +7,16 @@ import visa from "../../assets/img/icons/visa.svg"
 import master from "../../assets/img/icons/mastercard.svg"
 import amex from "../../assets/img/icons/amex.svg"
 import diners from "../../assets/img/icons/diners.svg"
+import {authProfile} from "../../actions/usersActions";
+import {GET_USER_AUTH, LOGIN_FAIL} from "../../types/usersTypes";
+import {useDispatch} from "react-redux";
 
 const Profile = () => {
+    const dispatch = useDispatch();
     const [modalCreditCard, setModalCreditCard] = useState(false);
-
+    useEffect(() => {
+        dispatch(authProfile('auth/user-profile',GET_USER_AUTH,LOGIN_FAIL))
+    }, [dispatch])
     const openCloseModalCreditCard = () => {
         setModalCreditCard(!modalCreditCard)
     }
@@ -22,6 +28,12 @@ const Profile = () => {
                 <h4 className="font-Poppins-Sb text-[28px] text-primary text-center">Configuración De Cuenta</h4>
                 <Tab.Group>
                     <Tab.List className="mt-12 space-x-24 font-Poppins-Sb text-[18px] text-center">
+                        <Tab className={({selected}) =>
+                            selected ? 'text-primary' : 'text-black'
+                        }>
+                            Mis Subastas
+                            <hr className="w-[180px] h-[5px] bg-gray-400"/>
+                        </Tab>
                         <Tab className={({selected}) =>
                             selected ? 'text-primary' : 'text-black'
                         }>
@@ -40,8 +52,19 @@ const Profile = () => {
                             Mis Direcciones
                             <hr className="w-[180px] h-[5px] bg-gray-400"/>
                         </Tab>
+                        <Tab className={({selected}) =>
+                            selected ? 'text-primary' : 'text-black'
+                        }>
+                            Mi Historial
+                            <hr className="w-[180px] h-[5px] bg-gray-400"/>
+                        </Tab>
                     </Tab.List>
                     <Tab.Panels className="px-80 mt-16 mb-32">
+                        <Tab.Panel>
+                            <div>
+
+                            </div>
+                        </Tab.Panel>
                         <Tab.Panel>
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
@@ -187,10 +210,13 @@ const Profile = () => {
                             </div>
                         </Tab.Panel>
                         <Tab.Panel>Content 3</Tab.Panel>
+                        <Tab.Panel>
+                            Mi historial
+                        </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>
             </div>
-            <Modal onOpen={modalCreditCard} onClose={setModalCreditCard}>
+            <Modal height="max-w-3xl" onOpen={modalCreditCard} onClose={setModalCreditCard}>
                  <div className="py-12 px-28">
                      <h4 className="text-center font-Poppins-Sb text-[20px] tracking-wide">Obtenga la aprobación más rápido con una tarjeta registrada</h4>
                      <p className="mt-6">Esto nos ayudará a verificar su elegibilidad para ofertar y le dará una mejor oportunidad de
